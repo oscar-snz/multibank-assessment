@@ -1,0 +1,22 @@
+{
+  "homePage": {
+    "marketSectionHeading": "Catch your next trade",
+    "marketCategories": ["Top Gainers", "Trending Now", "Top Losers"]
+  },
+  "explorePage": {
+    "heading": "Markets at your fingertips",
+    "spotMarket": {
+      "heading": "Spot market",
+      "descriptionContains": "cryptocurrency spot market data"
+    },
+    "actionCards": [
+      "Earn interest on your assets",
+      "Get crypto with your card",
+      "Deposits using card or wire transfer"
+    ],
+    "mobileAppBanner": {
+      "heading": "Explore. Track. Trade.",
+      "downloadHref": "https://mbio.go.link/6OW91"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "multibank-assessment",
+  "version": "1.0.0",
+  "description": "QA Automation framework for the MultiBank (mb.io) trading platform using Playwright + POM.",
+  "scripts": {
+    "test":               "playwright test",
+    "test:headed":        "playwright test --headed",
+    "test:chromium":      "playwright test --project=chromium",
+    "test:firefox":       "playwright test --project=firefox",
+    "test:webkit":        "playwright test --project=webkit",
+    "test:mobile":        "playwright test --project='Mobile Chrome' --project='Mobile Safari'",
+    "test:navigation":    "playwright test tests/navigation.spec.ts",
+    "test:trading":       "playwright test tests/trading.spec.ts",
+    "test:content":       "playwright test tests/content.spec.ts",
+    "test:why-multibank": "playwright test tests/why-multibank.spec.ts",
+    "test:ci":            "playwright test --reporter=github,list,html",
+    "typecheck":          "tsc --noEmit",
+    "report":             "playwright show-report",
+    "install:browsers":   "playwright install --with-deps"
+  },
+  "keywords": ["playwright", "automation", "qa", "testing", "multibank"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0"
+  }
+}

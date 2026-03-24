@@ -1,0 +1,44 @@
+{
+  "homePage": {
+    "heroHeading": "Crypto for everyone",
+    "heroDescriptionContains": "Simple, secure and speedy",
+    "downloadAppHref": "https://mbio.go.link/6OW91",
+    "smartWaysHeading": "Smarter ways to trade and grow",
+    "portfolioHeading": "Securely build your portfolio"
+  },
+  "footer": {
+    "copyrightContains": "Copyright. All Rights Reserved. mb.io",
+    "legalLinks": [
+      { "text": "Terms & Conditions",    "href": "/en/about/terms-conditions" },
+      { "text": "Privacy Policy",        "href": "/en/about/privacy-policy" },
+      { "text": "Client Agreement",      "href": "/en/about/client-agreement" },
+      { "text": "Cookie Policy",         "href": "/en/about/cookie-policy" },
+      { "text": "Acceptable Use Policy", "href": "/en/about/acceptable-use-policy" }
+    ],
+    "supportLinks": [
+      { "text": "Contact Us", "href": "/en/support/contact-us" }
+    ],
+    "paymentMethods": ["Mastercard", "Visa", "American Express", "PIX", "UnionPay", "SEPA", "Swift", "SPEI"],
+    "securityAuditHrefContains": "hacken.io"
+  },
+  "companyPage": {
+    "mainHeading": "Why MultiBank Group?",
+    "subheadingContains": "For nearly two decades",
+    "stats": [
+      { "value": "$2 trillion",  "label": "Annual turnover" },
+      { "value": "2,000,000+",  "label": "Customers worldwide" },
+      { "value": "25+",         "label": "Offices globally" }
+    ],
+    "contentSections": [
+      "A tradition of global leadership",
+      "Innovation with purpose",
+      "Integrity built into every decision"
+    ],
+    "pillars": [
+      "Regulation at our core",
+      "Proven track record",
+      "Secure & trusted"
+    ],
+    "communityHeading": "Community & Media"
+  }
+}

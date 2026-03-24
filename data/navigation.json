@@ -1,0 +1,20 @@
+{
+  "baseUrl": "https://mb.io",
+  "expectedNavItems": ["Explore", "Features", "Company", "$MBG🔥"],
+  "minNavItemCount": 4,
+  "navItemLinkTests": [
+    { "label": "Explore",  "href": "/en/explore"  },
+    { "label": "Features", "href": "/en/features" },
+    { "label": "Company",  "href": "/en/company"  }
+  ],
+  "authLinks": {
+    "signIn": { "text": "Sign in", "hrefContains": "login"    },
+    "signUp": { "text": "Sign up", "hrefContains": "register" }
+  },
+  "pageTitles": {
+    "home":     "Trade Crypto Fast & Secure | Low Fees Exchange | mb.io",
+    "explore":  "Explore Crypto Markets | Live Prices & Data | mb.io",
+    "features": "Crypto Trading Features | Advanced Tools | mb.io",
+    "company":  "About mb.io | MultiBank Group Exchange Since 2005"
+  }
+}
