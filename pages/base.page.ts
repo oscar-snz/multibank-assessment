@@ -12,7 +12,7 @@ import { AppConfig } from '../config/env.config';
  *   to declare where it lives in the application.
  */
 export abstract class BasePage {
-  protected readonly page: Page;
+  readonly page: Page;
 
   constructor(page: Page) {
     this.page = page;
