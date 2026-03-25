@@ -30,6 +30,8 @@ export class NavigationComponent {
 
   /** Mobile: hamburger button that opens the nav drawer. */
   private readonly hamburgerButton: Locator;
+  /** Mobile: the same button after the drawer is open (label flips to "Close menu"). */
+  private readonly closeMenuButton: Locator;
 
   /**
    * Mobile: the unlabeled <nav> that slides in after the hamburger is clicked.
@@ -38,33 +40,47 @@ export class NavigationComponent {
    */
   private readonly mobileNavContainer: Locator;
 
-  /** Auth links in the header (hidden on mobile; become visible inside mobile drawer). */
+  /**
+   * Auth links.
+   * Desktop: Sign In is inside nav[aria-label="Main"] (inside <header>).
+   * Mobile:  The hamburger opens a <dialog> overlay. Sign In appears in the
+   *          dialog footer (dialog > generic > link "Sign in"), NOT in <header>.
+   *          Sign Up stays in the <header> banner on both viewports.
+   */
   private readonly signInLink: Locator;
+  private readonly mobileDialogSignInLink: Locator;
   private readonly signUpLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.navContainer       = page.getByRole('navigation', { name: 'Main' });
-    this.navLinks           = this.navContainer.getByRole('link');
+    this.navContainer            = page.getByRole('navigation', { name: 'Main' });
+    this.navLinks                = this.navContainer.getByRole('link');
     // CSS-selector locator for the main nav — finds the element regardless of CSS visibility.
     // Used to read href values on mobile where getByRole() excludes display:none from the
     // accessibility tree and would otherwise timeout.
-    this.mainNavLinksByCss  = page.locator('nav[aria-label="Main"] a[href]');
-    this.hamburgerButton    = page.getByRole('button', { name: 'Open menu' });
-    this.mobileNavContainer = page.locator('nav:not([aria-label])');
-    this.signInLink         = page.locator('header a[href*="login"]');
-    this.signUpLink         = page.locator('header a[href*="register"]');
+    this.mainNavLinksByCss       = page.locator('nav[aria-label="Main"] a[href]');
+    this.hamburgerButton         = page.getByRole('button', { name: 'Open menu' });
+    this.closeMenuButton         = page.getByRole('button', { name: 'Close menu' });
+    this.mobileNavContainer      = page.locator('nav:not([aria-label])');
+    this.signInLink              = page.locator('header a[href*="login"]');
+    // Mobile Sign In lives inside the <dialog> that slides in from the hamburger,
+    // outside the <header> element entirely.
+    this.mobileDialogSignInLink  = page.getByRole('dialog').getByRole('link', { name: /sign\s*in/i });
+    this.signUpLink              = page.locator('header a[href*="register"]');
   }
 
   // ─── Viewport detection ───────────────────────────────────────────────────
 
   /**
    * Returns true when the site is rendering its mobile layout.
-   * Intentionally uses an immediate isVisible() — not an assertion — to branch
-   * behaviour without blocking for a timeout when on desktop.
+   * Checks both button states — the label flips from "Open menu" to "Close menu"
+   * once the drawer is open, so either being visible confirms a mobile viewport.
    */
   private async isMobile(): Promise<boolean> {
-    return this.hamburgerButton.isVisible();
+    return (
+      (await this.hamburgerButton.isVisible()) ||
+      (await this.closeMenuButton.isVisible())
+    );
   }
 
   /**
@@ -183,17 +199,34 @@ export class NavigationComponent {
   // ─── Auth links ───────────────────────────────────────────────────────────
 
   /**
+   * The header contains multiple elements matching `header a[href*="login"]`
+   * (desktop nav, mobile overlay, possibly hidden duplicates). This helper
+   * iterates all matches and returns the first one that is currently visible,
+   * avoiding strict-mode violations from multi-match locators.
+   */
+  private async getVisibleSignInLink(): Promise<Locator | null> {
+    if (await this.isMobile()) {
+      // On mobile the Sign In link is in the <dialog> overlay, not in <header>
+      const link = this.mobileDialogSignInLink.first();
+      if (await link.isVisible()) return link;
+      return null;
+    }
+    // Desktop: multiple hidden duplicates may exist — return the first visible one
+    const count = await this.signInLink.count();
+    for (let i = 0; i < count; i++) {
+      const link = this.signInLink.nth(i);
+      if (await link.isVisible()) return link;
+    }
+    return null;
+  }
+
+  /**
    * Returns true when the Sign In link is accessible.
    * On mobile it is hidden until the drawer is opened.
    */
   async isSignInVisible(): Promise<boolean> {
-    try {
-      if (await this.isMobile()) await this.openMobileMenuIfNeeded();
-      await expect(this.signInLink).toBeVisible({ timeout: AppConfig.DEFAULT_TIMEOUT });
-      return true;
-    } catch {
-      return false;
-    }
+    if (await this.isMobile()) await this.openMobileMenuIfNeeded();
+    return (await this.getVisibleSignInLink()) !== null;
   }
 
   async isSignUpVisible(): Promise<boolean> {
@@ -207,7 +240,10 @@ export class NavigationComponent {
 
   async getSignInHref(): Promise<string | null> {
     if (await this.isMobile()) await this.openMobileMenuIfNeeded();
-    return this.signInLink.getAttribute('href');
+    const link = await this.getVisibleSignInLink();
+    return link
+      ? link.getAttribute('href')
+      : this.signInLink.first().getAttribute('href');
   }
 
   async getSignUpHref(): Promise<string | null> {
